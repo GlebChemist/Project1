@@ -1,0 +1,93 @@
+<html>
+<head><!--<meta charset="UTF-8">--><meta charset="UTF-8"><title>Информация об экране</title>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+ integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"/>
+<link rel="stylesheet" href="Stile.css"/>
+<style>body {font-family: Arial; text-align: center;} .a {color: #007bff} 
+.input {display: none; margin-top: 5px;} </style>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="info.html">Информация</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="counter.html">Калькулятор</a>
+            </li><li class="nav-item">
+            </li></ul></div></div>
+    </nav>
+        <h1>Информация об экране</h1>
+        <div class="a" id="FPS">Загрузка...</div>
+        <div class="a" id="Resolution">Загрузка...</div>
+    <div class="a" id="Colour"> <a href="https://w.wiki/FvqE">Глубина цвета</a>: <select id="Select" onchange="showInput()"> 
+        <option value="8">8 бит</option>
+        <option value="16">16 бит</option>
+        <option value="24">24 бит</option>
+        <option value="48">48 бит</option>
+        <option value="other">Другое (укажите число)</option>
+    </select> </div>
+    <div id="input" class="input">
+        <input type="number" id="number-input" name="number" value="1" min="1" step="1">
+    </div>
+        <script>
+        function showInput() {
+            //const d = document.getElementById('Select');
+            //const input = document.getElementById('input');
+            if (document.getElementById('Select').value === 'other') {document.getElementById('input').style.display = 'block';} 
+            else {document.getElementById('input').style.display = 'none';}
+        }
+    </script>
+    <p><button style="border: 5px solid green; border-radius: 12px; width: 100px;" type="button" onclick="count()">рассчитать</button>
+    <br><strong>Расход видеопамяти на одну секунду: </strong><span id="result">—</span></p>
+    <script>
+        function getRefreshRate() {
+            return new Promise(resolve => {
+                let t;
+                let f = 0;
+                // =^..^= ?!
+                function counter() {
+                    if (!t) {
+                        t = performance.now();}
+                    f++;
+                    if (performance.now() - t >= 1000) {
+                        const refreshRate = f;
+                        resolve(refreshRate);
+                        return;}
+                    requestAnimationFrame(counter);}
+                requestAnimationFrame(counter);});}
+        //const w = window.screen.width;
+        //const h = window.screen.height;
+        const resolution = `${window.screen.width} × ${window.screen.height}`;
+            document.getElementById('Resolution').innerHTML = 
+                `<a href="https://w.wiki/7ggZ">Разрешение экрана</a>: ${resolution}`;
+        getRefreshRate()
+        .then(refreshRate => {
+            globalRefreshRate = refreshRate
+            document.getElementById('FPS').innerHTML = 
+                `<a href="https://w.wiki/C7oi">Частота обновления</a>: ${5*Math.round(refreshRate/5)} Гц`;
+                const rate = refreshRate
+        })
+        .catch(error => {
+            document.getElementById('FPS').innerText = 'Не удалось определить частоту обновления';
+        });
+        function count() {
+            let c; 
+            if(document.getElementById('Select').value === 'other')
+                {c = parseFloat(document.getElementById('number-input').value)}
+            else {c = parseFloat(document.getElementById('Select').value)}
+            const result = window.screen.width * window.screen.height * globalRefreshRate * c;
+            document.getElementById('result').textContent = result.toLocaleString() + " бит";
+        }
+    </script>
+</html>
